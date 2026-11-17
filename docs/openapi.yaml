@@ -1,0 +1,279 @@
+openapi: 3.1.0
+info:
+  title: TaskFlow Unified API Contract
+  version: 1.0.0
+  description: Contrato único implementado por NestJS, Fastify y FastAPI.
+
+paths:
+  /health:
+    get:
+      summary: Verificar salud de la API y conexión a PostgreSQL Cloud
+      tags: [Health]
+      responses:
+        '200':
+          description: Servicio y base de datos operativos
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [status, service, database, timestamp]
+                properties:
+                  status:
+                    type: string
+                    enum: [ok]
+                  service:
+                    type: string
+                    example: taskflow-api-nestjs
+                  database:
+                    type: string
+                    enum: [up]
+                  timestamp:
+                    type: string
+                    format: date-time
+        '503':
+          description: Base de datos inaccesible
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /tasks:
+    post:
+      summary: Crear una nueva tarea
+      tags: [Tasks]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTaskRequest'
+      responses:
+        '201':
+          description: Tarea creada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '400':
+          description: Error de validación
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    get:
+      summary: Listar tareas con filtros y paginación
+      tags: [Tasks]
+      parameters:
+        - name: status
+          in: query
+          schema:
+            $ref: '#/components/schemas/TaskStatus'
+        - name: priority
+          in: query
+          schema:
+            $ref: '#/components/schemas/TaskPriority'
+        - name: assignee
+          in: query
+          schema:
+            type: string
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 10
+      responses:
+        '200':
+          description: Listado paginado de tareas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedTasksResponse'
+
+  /tasks/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      summary: Obtener detalle de una tarea
+      tags: [Tasks]
+      responses:
+        '200':
+          description: Tarea encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '404':
+          description: Tarea no encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    patch:
+      summary: Actualizar parcialmente una tarea
+      tags: [Tasks]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTaskRequest'
+      responses:
+        '200':
+          description: Tarea actualizada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '404':
+          description: Tarea no encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      summary: Eliminar una tarea
+      tags: [Tasks]
+      responses:
+        '204':
+          description: Tarea eliminada sin contenido
+        '404':
+          description: Tarea no encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    TaskStatus:
+      type: string
+      enum: [pendiente, en_curso, hecha]
+      default: pendiente
+    TaskPriority:
+      type: string
+      enum: [baja, media, alta]
+      default: media
+    Task:
+      type: object
+      required: [id, title, status, priority, assignee, dueDate, createdAt, updatedAt]
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+          minLength: 3
+          maxLength: 100
+        description:
+          type: [string, 'null']
+          maxLength: 500
+        status:
+          $ref: '#/components/schemas/TaskStatus'
+        priority:
+          $ref: '#/components/schemas/TaskPriority'
+        assignee:
+          type: string
+          maxLength: 100
+        dueDate:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    CreateTaskRequest:
+      type: object
+      required: [title, assignee, dueDate]
+      properties:
+        title:
+          type: string
+          minLength: 3
+          maxLength: 100
+        description:
+          type: string
+          maxLength: 500
+        status:
+          $ref: '#/components/schemas/TaskStatus'
+        priority:
+          $ref: '#/components/schemas/TaskPriority'
+        assignee:
+          type: string
+          maxLength: 100
+        dueDate:
+          type: string
+          format: date-time
+    UpdateTaskRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 3
+          maxLength: 100
+        description:
+          type: string
+          maxLength: 500
+        status:
+          $ref: '#/components/schemas/TaskStatus'
+        priority:
+          $ref: '#/components/schemas/TaskPriority'
+        assignee:
+          type: string
+          maxLength: 100
+        dueDate:
+          type: string
+          format: date-time
+    PaginatedTasksResponse:
+      type: object
+      required: [data, meta]
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Task'
+        meta:
+          type: object
+          required: [total, page, limit, lastPage]
+          properties:
+            total:
+              type: integer
+            page:
+              type: integer
+            limit:
+              type: integer
+            lastPage:
+              type: integer
+    ErrorResponse:
+      type: object
+      required: [statusCode, error, message, timestamp, path]
+      properties:
+        statusCode:
+          type: integer
+        error:
+          type: string
+        message:
+          oneOf:
+            - type: string
+            - type: array
+              items:
+                type: string
+        timestamp:
+          type: string
+          format: date-time
+        path:
+          type: string
