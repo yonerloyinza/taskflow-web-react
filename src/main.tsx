@@ -5,6 +5,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { RouterProvider } from 'react-router/dom'
 import { router } from './router'
 import { ToastProvider, ToastContainer } from './components/ui'
+import { ErrorBoundary } from './components/ErrorBoundary'
 import './index.css'
 
 const queryClient = new QueryClient({
@@ -28,12 +29,14 @@ if (!rootElement) {
 
 createRoot(rootElement).render(
   <StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <ToastProvider>
-        <RouterProvider router={router} />
-        <ToastContainer />
-      </ToastProvider>
-      <ReactQueryDevtools initialIsOpen={false} />
-    </QueryClientProvider>
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <ToastProvider>
+          <RouterProvider router={router} />
+          <ToastContainer />
+        </ToastProvider>
+        <ReactQueryDevtools initialIsOpen={false} />
+      </QueryClientProvider>
+    </ErrorBoundary>
   </StrictMode>,
 )
