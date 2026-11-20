@@ -54,7 +54,7 @@ export function Header() {
                       ? 'bg-white text-blue-600 shadow-sm dark:bg-slate-700 dark:text-blue-400'
                       : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200',
                   ].join(' ')}
-                  title={b.baseUrl}
+                  title={b.proxyPath}
                   aria-label={`Usar backend ${b.name}`}
                   aria-pressed={backendId === b.id}
                 >
