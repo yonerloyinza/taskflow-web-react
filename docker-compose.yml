@@ -1,5 +1,5 @@
 services:
-  web-react:
+  taskflow-web-react:
     build:
       context: .
       dockerfile: Dockerfile
@@ -11,11 +11,11 @@ services:
       - "80"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.web-react.rule=Host(`taskflow-react.xprad.com`)"
-      - "traefik.http.routers.web-react.entrypoints=websecure"
-      - "traefik.http.routers.web-react.tls.certresolver=lets-encrypt"
-      - "traefik.http.services.web-react.loadbalancer.server.port=80"
-      - "traefik.http.routers.web-react.middlewares=secHeaders@file"
+      - "traefik.http.routers.taskflow-web-react.rule=Host(`taskflow-react.xprad.com`)"
+      - "traefik.http.routers.taskflow-web-react.entrypoints=websecure"
+      - "traefik.http.routers.taskflow-web-react.tls.certresolver=lets-encrypt"
+      - "traefik.http.services.taskflow-web-react.loadbalancer.server.port=80"
+      - "traefik.http.routers.taskflow-web-react.middlewares=secHeaders@file"
     healthcheck:
       test: ["CMD", "wget", "-q", "--spider", "http://localhost/health"]
       interval: 30s

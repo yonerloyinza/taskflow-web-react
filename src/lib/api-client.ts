@@ -1,6 +1,20 @@
 import type { ErrorResponse } from '@/types'
+import { getBackendById } from './backends'
 
-const BASE_URL = import.meta.env['VITE_API_BASE_URL'] ?? '/api'
+const STORAGE_KEY = 'taskflow-backend'
+
+function getBaseUrl(): string {
+  if (typeof window === 'undefined') {
+    return import.meta.env['VITE_API_BASE_URL'] ?? '/api'
+  }
+  const backendId = localStorage.getItem(STORAGE_KEY)
+  const backend = getBackendById(backendId ?? '')
+  return backend.baseUrl
+}
+
+function getBaseUrlSync(): string {
+  return getBaseUrl()
+}
 
 export class ApiError extends Error {
   readonly statusCode: number
@@ -17,7 +31,7 @@ export class ApiError extends Error {
 }
 
 function buildUrl(path: string, query?: Record<string, string | number | undefined>): string {
-  const url = `${BASE_URL}${path}`
+  const url = `${getBaseUrlSync()}${path}`
   if (!query) return url
   const params = new URLSearchParams()
   for (const [key, value] of Object.entries(query)) {
