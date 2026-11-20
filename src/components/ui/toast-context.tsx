@@ -8,7 +8,7 @@ export interface Toast {
   variant: ToastVariant
 }
 
-interface ToastContextValue {
+export interface ToastContextValue {
   toasts: Toast[]
   addToast: (message: string, variant?: ToastVariant) => void
   removeToast: (id: string) => void
@@ -16,20 +16,10 @@ interface ToastContextValue {
 
 const ToastContext = createContext<ToastContextValue | null>(null)
 
-export function useToastContext() {
+export function useToastContext(): ToastContextValue {
   const ctx = useContext(ToastContext)
   if (!ctx) throw new Error('useToastContext must be used within ToastProvider')
   return ctx
-}
-
-export function useToastActions() {
-  const { addToast } = useToastContext()
-  return { addToast }
-}
-
-export function useToastState() {
-  const { toasts, removeToast } = useToastContext()
-  return { toasts, removeToast }
 }
 
 export function ToastProvider({ children }: { children: React.ReactNode }) {

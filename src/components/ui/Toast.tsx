@@ -1,4 +1,4 @@
-import { useToastState } from './toast-context'
+import { useToastContext } from './toast-context'
 import { cn } from '@/lib/utils'
 
 const variantClasses = {
@@ -14,7 +14,7 @@ const variantIcons = {
 }
 
 export function ToastContainer() {
-  const { toasts, removeToast } = useToastState()
+  const { toasts, removeToast } = useToastContext()
 
   if (toasts.length === 0) return null
 

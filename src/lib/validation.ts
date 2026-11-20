@@ -1,9 +1,10 @@
 import { z } from 'zod'
 import { TASK_PRIORITIES, TASK_STATUSES } from '@/types'
+import type { TaskPriority, TaskStatus } from '@/types'
 
-export const taskStatusSchema = z.enum(TASK_STATUSES as [string, ...string[]])
+export const taskStatusSchema = z.enum(TASK_STATUSES as [TaskStatus, ...TaskStatus[]])
 
-export const taskPrioritySchema = z.enum(TASK_PRIORITIES as [string, ...string[]])
+export const taskPrioritySchema = z.enum(TASK_PRIORITIES as [TaskPriority, ...TaskPriority[]])
 
 const uuidSchema = z.string().uuid('ID inválido')
 
