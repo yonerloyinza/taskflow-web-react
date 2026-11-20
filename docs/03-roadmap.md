@@ -7,4 +7,4 @@
 - [x] **Paso 4 — Feature: Tasks CRUD:** Lista paginada con filtros (status, priority, assignee), Crear tarea (Modal + Form), Editar tarea (Inline/Modal), Eliminar (Confirmación), Optimistic updates, Error handling UI (ErrorResponse toast).
 - [x] **Paso 5 — Health & Observability:** Página Health check, Error Boundary global, Loading states, Empty states, Accessibility (ARIA, focus management).
 - [x] **Paso 6a — Documentación y Docker:** AGENTS.md actualizado, docs/01-architecture.md, Dockerfile multi-etapa (node:22-alpine → nginx:alpine) para VPS AWS + Traefik, nginx.conf con SPA fallback + security headers.
-- [ ] **Paso 6b — CI/CD VPS:** GitHub Actions deploy.yml → SSH → `git pull` + `docker compose up -d --build --no-deps web-react` + `docker image prune -f` en `/opt/taskflow`. Variables en `/opt/taskflow/.env.web`. Sin Render, sin registros Docker externos.
+- [x] **Paso 6b — CI/CD VPS:** GitHub Actions deploy.yml → SSH → `git pull` + `docker compose up -d --build --no-deps web-react` + `docker image prune -f` en `/opt/taskflow-ecosystem/web-react`. Variables en `/opt/taskflow-ecosystem/.env.web`. Sin Render, sin registros Docker externos.
