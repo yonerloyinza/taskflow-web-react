@@ -2,7 +2,7 @@ export interface Backend {
   id: string
   name: string
   shortName: string
-  baseUrl: string
+  proxyPath: string
 }
 
 export const BACKENDS: Backend[] = [
@@ -10,13 +10,13 @@ export const BACKENDS: Backend[] = [
     id: 'nestjs',
     name: 'NestJS',
     shortName: 'Nest',
-    baseUrl: 'https://taskflow-api-n.xprad.com',
+    proxyPath: '/api/nestjs',
   },
   {
     id: 'fastapi',
     name: 'FastAPI',
     shortName: 'FastAPI',
-    baseUrl: 'https://taskflow-api-fastapi.xprad.com',
+    proxyPath: '/api/fastapi',
   },
 ]
 
