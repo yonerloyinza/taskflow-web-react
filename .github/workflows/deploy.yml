@@ -36,7 +36,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no \
             "${VPS_USER}@${VPS_HOST}" \
             "set -euo pipefail; \
-             cd /opt/taskflow-ecosystem/web-react; \
+             cd /opt/taskflow-ecosystem/taskflow-web-react; \
              git pull origin main; \
              docker compose up -d --build --no-deps taskflow-web-react; \
              docker image prune -f"
