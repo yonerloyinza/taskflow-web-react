@@ -8,7 +8,16 @@ export const taskPrioritySchema = z.enum(TASK_PRIORITIES as [TaskPriority, ...Ta
 
 const uuidSchema = z.string().uuid('ID inválido')
 
-const dateTimeSchema = z.string().datetime({ offset: true }).or(z.string().datetime())
+const dateTimeSchema = z
+  .string()
+  .min(1, 'La fecha es obligatoria')
+  .refine(
+    (val) => {
+      const date = new Date(val)
+      return !Number.isNaN(date.getTime())
+    },
+    { message: 'Fecha inválida' },
+  )
 
 export const createTaskSchema = z.object({
   title: z
