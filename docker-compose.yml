@@ -17,7 +17,7 @@ services:
       - "traefik.http.services.taskflow-web-react.loadbalancer.server.port=80"
       - "traefik.http.routers.taskflow-web-react.middlewares=secHeaders@file"
     healthcheck:
-      test: ["CMD", "wget", "-q", "--spider", "http://localhost/health"]
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1/health"]
       interval: 30s
       timeout: 10s
       retries: 3
