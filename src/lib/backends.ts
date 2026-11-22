@@ -18,6 +18,12 @@ export const BACKENDS: Backend[] = [
     shortName: 'FastAPI',
     proxyPath: '/api/fastapi',
   },
+  {
+    id: 'go',
+    name: 'Go',
+    shortName: 'Go',
+    proxyPath: '/api/go',
+  },
 ]
 
 export const DEFAULT_BACKEND_ID = 'nestjs'
