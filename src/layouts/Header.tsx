@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'react-router'
 import { useDarkMode } from '@/hooks/useDarkMode'
-import { useBackend } from '@/hooks/useBackend'
+import { BackendSelector } from './BackendSelector'
 
 const NAV_ITEMS = [
   { to: '/tasks', label: 'Tareas', icon: '✓' },
@@ -10,7 +10,6 @@ const NAV_ITEMS = [
 export function Header() {
   const { pathname } = useLocation()
   const { isDark, toggle } = useDarkMode()
-  const { backendId, setBackend, backends } = useBackend()
 
   return (
     <header className="sticky top-0 z-10 border-b border-slate-200 bg-white/80 backdrop-blur dark:border-slate-800 dark:bg-slate-900/80">
@@ -39,30 +38,7 @@ export function Header() {
               )
             })}
           </nav>
-          <div className="flex items-center gap-1.5">
-            <span className="hidden text-xs font-medium uppercase tracking-wider text-slate-400 sm:inline">
-              API
-            </span>
-            <div className="flex rounded-lg border border-slate-200 bg-slate-50 p-0.5 dark:border-slate-700 dark:bg-slate-800">
-              {backends.map((b) => (
-                <button
-                  key={b.id}
-                  onClick={() => setBackend(b.id)}
-                  className={[
-                    'rounded-md px-2.5 py-1 text-xs font-medium transition-colors',
-                    backendId === b.id
-                      ? 'bg-white text-blue-600 shadow-sm dark:bg-slate-700 dark:text-blue-400'
-                      : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200',
-                  ].join(' ')}
-                  title={b.proxyPath}
-                  aria-label={`Usar backend ${b.name}`}
-                  aria-pressed={backendId === b.id}
-                >
-                  {b.shortName}
-                </button>
-              ))}
-            </div>
-          </div>
+          <BackendSelector />
           <button
             onClick={toggle}
             className="rounded-lg p-2 text-slate-500 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-slate-400 dark:hover:bg-slate-800"
